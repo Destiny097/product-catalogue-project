@@ -41,7 +41,7 @@ export default function Navbar() {
         <button onClick={() => setSearchOpen(!searchOpen)}>
           <FiSearch className="hover:text-gray-600" />
         </button>
-        <a href="#"><FiUser className="hover:text-gray-600" /></a>
+        <Link to="/signup"><FiUser className="hover:text-gray-600" /></Link>
         <a href="#"><FiShoppingBag className="hover:text-gray-600" /></a>
         {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
