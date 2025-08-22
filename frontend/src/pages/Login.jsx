@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
 import { FaApple, FaGoogle, FaFacebook } from "react-icons/fa";
 import signup from "../../public/assets/Signup.jpg"
+import axios from "axios";
 export default function Login() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -12,10 +14,20 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("Login Data:", form);
-    // Later connect this to backend
+    try{
+      const res = await axios.post("http://localhost:5000/api/auth/login", form);
+
+      localStorage.setItem("token",res.data.token);
+      localStorage.setItem("user",JSON.stringify(res.data.user));
+      alert("Login Succesful");
+      navigate("/");
+    }
+    catch(err)
+    {
+      alert(err.response?.data?.message || "Login Failed");
+    }
   };
 
   return (
