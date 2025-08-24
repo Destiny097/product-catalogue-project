@@ -1,42 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { FiHeart, FiPlus, FiMinus } from "react-icons/fi";
+import { FiPlus, FiMinus } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
-import products from "../data/products";
 import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
-import prod from "../../public/assets/prods.jpg"
+import prod from "../../public/assets/prods.jpg";
+
 export default function Product() {
   const [openFilter, setOpenFilter] = useState(null);
   const [price, setPrice] = useState(500);
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [products, setProducts] = useState([]); // fetched products
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const location = useLocation();
-
-  // Extract search query from URL
   const query = new URLSearchParams(location.search).get("search") || "";
 
+  // ✅ Fetch products from backend
+  useEffect(()=>{
+      const fetchProducts = async() =>{
+        try{
+          const res = await fetch("http://localhost:5000/api/products");
+          const data = await res.json();
+          console.log("Fetched Products");
+          setProducts(data);
+        }
+        catch(err)
+        {
+          console.error(err);
+        }
+      };
+  
+      fetchProducts();
+    },[]);
+
+  // ✅ Apply filters whenever query/price/products change
   useEffect(() => {
-  let filtered = products.filter((p) => {
-    const productName = p.name.toLowerCase();
-    const queryLower = query.toLowerCase();
+    let filtered = products.filter((p) => {
+      const productName = p.name.toLowerCase();
+      const queryLower = query.toLowerCase();
 
-    // If search query matches exactly → show only that product
-    if (queryLower && productName === queryLower) {
-      return true;
-    }
+      if (queryLower && productName === queryLower) return true;
+      return queryLower ? productName.includes(queryLower) : true;
+    });
 
-    // Otherwise, allow partial matches
-    return queryLower ? productName.includes(queryLower) : true;
-  });
+    filtered = filtered.filter((p) => p.price <= price); // price is numeric in DB
 
-  // Apply price filter
-  filtered = filtered.filter(
-    (p) => parseInt(p.price.replace("$", "")) <= price
-  );
-
-  setFilteredProducts(filtered);
-}, [price, query]);
-
+    setFilteredProducts(filtered);
+  }, [price, query, products]);
 
   const toggleFilter = (filter) => {
     setOpenFilter(openFilter === filter ? null : filter);
@@ -44,15 +53,11 @@ export default function Product() {
 
   return (
     <>
-      <section style={{backgroundImage:`url(${prod})`}} className="w-full h-[60vh] bg-cover bg-no-repeat">
-
-      </section>
+      <section style={{ backgroundImage: `url(${prod})` }} className="w-full h-[60vh] bg-cover bg-no-repeat" />
       <section className="flex gap-10 px-6 py-12 md:px-12">
         {/* Sidebar Filters */}
         <aside className="w-[250px] hidden md:block">
           <h2 className="mb-6 text-xl font-semibold">Filters</h2>
-
-          {/* Price Filter */}
           <div className="py-3 border-b">
             <button
               className="flex items-center justify-between w-full font-medium text-left"
@@ -78,8 +83,6 @@ export default function Product() {
               </div>
             )}
           </div>
-
-          
         </aside>
 
         {/* Products Grid */}
@@ -91,11 +94,11 @@ export default function Product() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
-                <Link to="/productpage">
-                  <div key={product.id} className="relative group">
+                <Link to={`/product/${product._id}`} key={product._id}>
+                  <div className="relative group">
                     <div className="relative overflow-hidden rounded-md">
                       <img
-                        src={product.image}
+                        src={product.image} // ✅ Coming from DB
                         alt={product.name}
                         className="object-cover w-full h-[350px] group-hover:scale-105 transition-transform duration-300"
                       />
@@ -114,7 +117,7 @@ export default function Product() {
                             ></span>
                           ))}
                         </div>
-                        <p className="font-semibold">{product.price}</p>
+                        <p className="font-semibold">${product.price}</p>
                       </div>
                     </div>
                   </div>
@@ -126,8 +129,6 @@ export default function Product() {
           </div>
         </div>
       </section>
-
-      
     </>
   );
 }
