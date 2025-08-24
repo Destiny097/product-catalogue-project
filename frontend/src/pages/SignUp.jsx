@@ -24,7 +24,7 @@ export default function Signup() {
         email: form.email,
         password:form.password,
       };
-      const res = await axios.post("http://localhost:5000/api/auth/signup",payload);
+      const res = await axios.post(`${import.meta.env.VITE_API_BASEURL}/api/auth/signup`,payload);
       alert("Signup Sucessful");
       navigate("/login")
     }
