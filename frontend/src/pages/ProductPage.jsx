@@ -102,9 +102,6 @@ export default function ProductPage() {
           <button onClick={() => addToCart(product)} className="flex-1 py-3 text-white bg-green-700 rounded-lg hover:bg-green-800">
             Add to Cart
           </button>
-          <button className="flex items-center gap-2 px-4 py-3 border rounded-lg hover:bg-gray-100">
-            <FaHeart /> Wishlist
-          </button>
         </div>
 
         {/* Fabric & Care */}

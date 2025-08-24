@@ -30,9 +30,9 @@ export default function Navbar() {
       {/* Desktop Links */}
       <ul className="hidden gap-6 md:flex font-montserrat">
         <li><Link to="/product" className="font-light text-[18px] hover:text-gray-500">Collection</Link></li>
-        <li><a href="#" className="font-light text-[18px] hover:text-gray-500">About Us</a></li>
-        <li><a href="#" className="font-light text-[18px] hover:text-gray-500">Sustainability</a></li>
-        <li><a href="#" className="font-light text-[18px] hover:text-gray-500">Orders</a></li>
+        <li><Link to="/aboutus" className="font-light text-[18px] hover:text-gray-500">About Us</Link></li>
+        <li><Link to="sus" className="font-light text-[18px] hover:text-gray-500">Sustainability</Link></li>
+        <li><Link to="/orders" href="#" className="font-light text-[18px] hover:text-gray-500">Orders</Link></li>
       </ul>
 
       {/* Icons */}
@@ -41,8 +41,17 @@ export default function Navbar() {
         <button onClick={() => setSearchOpen(!searchOpen)}>
           <FiSearch className="hover:text-gray-600" />
         </button>
-        <Link to="/signup"><FiUser className="hover:text-gray-600" /></Link>
-        <Link to="/cart"><FiShoppingBag className="hover:text-gray-600" /></Link>
+
+        {/* Profile Icon */}
+        <Link to={localStorage.getItem("token") ? "/profile" : "/login"}>
+          <FiUser className="hover:text-gray-600" />
+        </Link>
+
+        {/* Cart */}
+        <Link to="/cart">
+          <FiShoppingBag className="hover:text-gray-600" />
+        </Link>
+
         {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <FiX /> : <FiMenu />}

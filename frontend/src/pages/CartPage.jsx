@@ -1,8 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
-import "../index.css"
+import axios from "axios";
+import "../index.css";
+
 export default function CartPage() {
-  const { cart, removeFromCart, loading } = useContext(CartContext);
+  const { cart, removeFromCart, loading, clearCart } = useContext(CartContext);
+  const [placingOrder, setPlacingOrder] = useState(false);
+  const [message, setMessage] = useState("");
 
   if (loading) {
     return (
@@ -18,9 +22,41 @@ export default function CartPage() {
     0
   );
 
+  const handleCheckout = async () => {
+    setPlacingOrder(true);
+    setMessage("");
+    try {
+      const token = localStorage.getItem("token");
+      const { data } = await axios.post(
+        "/api/orders",
+        {
+          items: cart.map((item) => ({
+            product: item.product._id,
+            name: item.product.name,
+            qty: item.quantity,
+            price: item.product.price,
+          })),
+          totalPrice: total,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setMessage("✅ Order placed successfully!");
+      clearCart(); // empty the cart after order
+    } catch (err) {
+      console.error("Error placing order:", err);
+      setMessage("❌ Failed to place order.");
+    } finally {
+      setPlacingOrder(false);
+    }
+  };
+
   return (
     <div className="px-6 py-12 md:px-12">
       <h2 className="mb-6 text-2xl font-bold">Your Cart</h2>
+
+      {message && <p className="mb-4 text-center">{message}</p>}
 
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
@@ -44,7 +80,7 @@ export default function CartPage() {
               </div>
               <div className="text-right">
                 <p className="font-semibold">
-                  ${item.product.price * item.quantity}
+                  ₹{item.product.price * item.quantity}
                 </p>
                 <button
                   onClick={() => removeFromCart(item.product._id)}
@@ -60,9 +96,13 @@ export default function CartPage() {
 
       {cart.length > 0 && (
         <div className="mt-8 text-right">
-          <p className="text-xl font-bold">Total: ${total}</p>
-          <button className="px-6 py-2 mt-4 text-white bg-black rounded-lg">
-            Checkout
+          <p className="text-xl font-bold">Total: ₹{total}</p>
+          <button
+            onClick={handleCheckout}
+            disabled={placingOrder}
+            className="px-6 py-2 mt-4 text-white bg-black rounded-lg disabled:opacity-50"
+          >
+            {placingOrder ? "Placing Order..." : "Checkout"}
           </button>
         </div>
       )}
