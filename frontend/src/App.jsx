@@ -10,13 +10,14 @@ import Product from './pages/Product';
 import Signup from "./pages/SignUp";
 import Login from "./pages/Login";
 import './index.css';
+import ProductPage from "./pages/ProductPage";
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
-        {/* Home Page */}
+        
         <Route 
           path="/" 
           element={
@@ -30,12 +31,14 @@ function App() {
           } 
         />
 
-        {/* Products Page */}
+        
         <Route path="/product" element={<Product/>} />
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/login" element={<Login/>}/>
+        <Route path="/productpage" element={<ProductPage/>}/>
       </Routes>
       <Footer />
+      
     </>
   );
 }

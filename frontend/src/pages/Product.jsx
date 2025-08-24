@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiHeart, FiPlus, FiMinus } from "react-icons/fi";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import products from "../data/products";
 import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
@@ -91,32 +91,34 @@ export default function Product() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
-                <div key={product.id} className="relative group">
-                  <div className="relative overflow-hidden rounded-md">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="object-cover w-full h-[350px] group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
+                <Link to="/productpage">
+                  <div key={product.id} className="relative group">
+                    <div className="relative overflow-hidden rounded-md">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="object-cover w-full h-[350px] group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
 
-                  <div className="mt-4">
-                    <h3 className="text-lg font-semibold">{product.name}</h3>
-                    <p className="text-sm text-gray-600">{product.subtitle}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <div className="flex gap-2">
-                        {product.colors.map((color, index) => (
-                          <span
-                            key={index}
-                            className="w-4 h-4 border rounded-full"
-                            style={{ backgroundColor: color }}
-                          ></span>
-                        ))}
+                    <div className="mt-4">
+                      <h3 className="text-lg font-semibold">{product.name}</h3>
+                      <p className="text-sm text-gray-600">{product.subtitle}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="flex gap-2">
+                          {product.colors.map((color, index) => (
+                            <span
+                              key={index}
+                              className="w-4 h-4 border rounded-full"
+                              style={{ backgroundColor: color }}
+                            ></span>
+                          ))}
+                        </div>
+                        <p className="font-semibold">{product.price}</p>
                       </div>
-                      <p className="font-semibold">{product.price}</p>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))
             ) : (
               <p>No products found.</p>
