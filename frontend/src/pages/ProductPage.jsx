@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import "../index.css";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 export default function ProductPage() {
   const [selectedColor, setSelectedColor] = useState("");
@@ -8,7 +11,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const {addToCart} = useContext(CartContext);
   const { id } = useParams();
 
   useEffect(() => {
@@ -96,7 +99,7 @@ export default function ProductPage() {
 
         {/* Buttons */}
         <div className="flex gap-4 mt-6">
-          <button className="flex-1 py-3 text-white bg-green-700 rounded-lg hover:bg-green-800">
+          <button onClick={() => addToCart(product)} className="flex-1 py-3 text-white bg-green-700 rounded-lg hover:bg-green-800">
             Add to Cart
           </button>
           <button className="flex items-center gap-2 px-4 py-3 border rounded-lg hover:bg-gray-100">

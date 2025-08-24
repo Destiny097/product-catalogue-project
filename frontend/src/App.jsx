@@ -11,6 +11,7 @@ import Signup from "./pages/SignUp";
 import Login from "./pages/Login";
 import './index.css';
 import ProductPage from "./pages/ProductPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/product/:id" element={<ProductPage/>}/>
+        <Route path="/cart" element={<CartPage/>}/>
       </Routes>
       <Footer />
       
