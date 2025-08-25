@@ -1,9 +1,14 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL : `${import.meta.env.VITE_API_BASEURL}/api`,
-})
+  baseURL: import.meta.env.VITE_API_BASE_URL,  // e.g. https://ecommerceassignment-seven.vercel.app
+});
 
+// Get all products
 export const getProducts = () => API.get("/api/products");
-export const getProductById = () => API.get(`/api/products/${id}`);
-export const getCollections = () => API.get(`/api/collections`);
+
+// Get product by id
+export const getProductById = (id) => API.get(`/api/products/${id}`);
+
+// Get all collections
+export const getCollections = () => API.get("/api/collections");

@@ -10,7 +10,7 @@ export const CartProvider = ({ children }) => {
   const fetchCart = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${import.meta.env.VITE_API_BASEURL}/api/cart`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCart(res.data.cart || []);
@@ -42,7 +42,7 @@ export const CartProvider = ({ children }) => {
 
       const token = localStorage.getItem("token");
       await axios.post(
-        `${import.meta.env.VITE_API_BASEURL}/api/cart` ,
+        `${import.meta.env.VITE_API_BASE_URL}/api/cart` ,
         { productId: product._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );

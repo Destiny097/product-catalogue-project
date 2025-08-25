@@ -8,7 +8,7 @@ export default function BestSellers() {
   useEffect(()=>{
     const fetchProducts = async() =>{
       try{
-        const res = await fetch(`${import.meta.env.VITE_API_BASEURL}/api/products`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
         const data = await res.json();
         console.log("Fetched Products");
         setProducts(data);
