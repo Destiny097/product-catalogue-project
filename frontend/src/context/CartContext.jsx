@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 export const CartContext = createContext();
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
@@ -55,19 +55,21 @@ export const CartProvider = ({ children }) => {
 
   // Remove from cart (optimistic update)
   const removeFromCart = async (productId) => {
-    try {
-      setCart((prev) => prev.filter((item) => item.product._id !== productId));
+  try {
+    // update cart locally (optimistic update)
+    setCart((prev) => prev.filter((item) => item.product._id !== productId));
 
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/cart/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const token = localStorage.getItem("token");
+    await axios.delete(`${API_BASE_URL}/api/cart/${productId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      fetchCart();
-    } catch (error) {
-      console.error("Error removing from cart:", error);
-    }
-  };
+    // refresh cart from backend to stay in sync
+    fetchCart();
+  } catch (error) {
+    console.error("Error removing from cart:", error.response?.data || error.message);
+  }
+};
 
   useEffect(() => {
     fetchCart();
